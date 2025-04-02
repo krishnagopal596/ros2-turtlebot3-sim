@@ -1,0 +1,29 @@
+
+
+export TURTLEBOT3_MODEL=burger 
+
+cd ~/dev_ws
+
+colcon build --symlink-install​
+
+source ./install/setup.bash​
+
+source ./setenv_gazebo.bash
+
+ros2 launch turtlebot3_gazebo turtlebot3_house.launch.py​
+
+
+ros2 run turtlebot3_teleop teleop_keyboard​
+
+
+ros2 launch slam_toolbox online_async_launch.py \​
+
+  slam_params_file:=/opt/ros/galactic/share/turtlebot3_cartographer/config/turtlebot3_cartographer_lds.yaml \​
+
+  use_sim_time:=true
+  
+  
+  ros2 run rviz2 rviz2​
+  
+  
+  ros2 launch turtlebot3_slam turtlebot3_slam.launch.py​
