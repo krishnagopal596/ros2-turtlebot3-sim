@@ -1,10 +1,18 @@
 FROM dorowu/ubuntu-desktop-lxde-vnc:focal
 
 RUN echo "Set disable_coredump false" >> /etc/sudo.conf
-RUN apt-get update -q && \
+#RUN apt-get update -q && \
+#    apt-get upgrade -yq && \
+#    DEBIAN_FRONTEND=noninteractive apt-get install -yq wget curl git build-essential vim sudo lsb-release locales bash-completion tzdata gosu && \
+#    rm -rf /var/lib/apt/lists/*
+
+# Remove broken Chrome source if it exists to avoid GPG error
+RUN rm -f /etc/apt/sources.list.d/google-chrome.list || true && \
+    apt-get update -q && \
     apt-get upgrade -yq && \
     DEBIAN_FRONTEND=noninteractive apt-get install -yq wget curl git build-essential vim sudo lsb-release locales bash-completion tzdata gosu && \
     rm -rf /var/lib/apt/lists/*
+
 RUN useradd --create-home --home-dir /home/ubuntu --shell /bin/bash --user-group --groups adm,sudo ubuntu && \
     echo ubuntu:ubuntu | chpasswd && \
     echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
@@ -31,6 +39,13 @@ RUN apt-get update -q && \
 
 RUN apt-get update -q && \
     apt-get install -y dos2unix
+    
+RUN apt update && apt install -y \
+    ros-${ROS_DISTRO}-rviz2 \
+    ros-${ROS_DISTRO}-slam-toolbox \
+    ros-${ROS_DISTRO}-turtlebot3-cartographer \
+    ros-${ROS_DISTRO}-turtlebot3-msgs
+
 
 #RUN sudo apt-get update -q && \
 #    apt-get install ros-${ROS_DISTRO}-turtlesim && \
